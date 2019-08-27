@@ -2,31 +2,23 @@ import React from 'react';
 import { addVote } from '../reducers/anecdoteReducer';
 import Anecdote from './Anecdote';
 import { displayMessage, removeMessage } from '../reducers/notificationReducer';
+import { connect } from 'react-redux';
 
-const AnecdoteList = ({ store }) => {
-  const { anecdotes, filterTerm } = store.getState();
-
-  const anecdotesToRender = () => {
-    if (filterTerm) {
-      return anecdotes.filter(anecdote =>
-        anecdote.content.includes(filterTerm)
-      );
-    } else {
-      return anecdotes;
-    }
-  };
+const AnecdoteList = props => {
+  console.log('props', props);
+  const { anecdotesToShow, addVote, displayMessage, removeMessage } = props;
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotesToRender().map(anecdote => (
+      {anecdotesToShow.map(anecdote => (
         <Anecdote
           anecdote={anecdote}
           handleVote={() => {
-            store.dispatch(addVote(anecdote.id));
-            store.dispatch(displayMessage(`You voted '${anecdote.content}'`));
+            addVote(anecdote.id);
+            displayMessage(`You voted '${anecdote.content}'`);
             setTimeout(() => {
-              store.dispatch(removeMessage());
+              removeMessage();
             }, 3000);
           }}
           key={anecdote.id}
@@ -36,4 +28,27 @@ const AnecdoteList = ({ store }) => {
   );
 };
 
-export default AnecdoteList;
+const anecdotesToRender = ({ anecdotes, filterTerm }) => {
+  if (filterTerm) {
+    return anecdotes.filter(anecdote => anecdote.content.includes(filterTerm));
+  } else {
+    return anecdotes;
+  }
+};
+
+const mapStateToProps = state => {
+  return {
+    anecdotesToShow: anecdotesToRender(state)
+  };
+};
+
+const mapDispatchToProps = {
+  addVote,
+  displayMessage,
+  removeMessage
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteList);

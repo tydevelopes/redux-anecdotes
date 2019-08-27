@@ -1,9 +1,10 @@
 import React from 'react';
 import { changeSearchTerm } from '../reducers/filterReducer';
+import { connect } from 'react-redux';
 
-const Filter = ({ store }) => {
+const Filter = ({ changeSearchTerm }) => {
   const handleChange = event => {
-    store.dispatch(changeSearchTerm(event.target.value.trim()));
+    changeSearchTerm(event.target.value.trim());
   };
   const style = {
     marginBottom: 10
@@ -16,4 +17,7 @@ const Filter = ({ store }) => {
   );
 };
 
-export default Filter;
+export default connect(
+  null,
+  { changeSearchTerm }
+)(Filter);

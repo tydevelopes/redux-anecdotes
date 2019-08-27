@@ -4,13 +4,14 @@ import AnecdoteForm from './AnecdoteForm';
 import Notification from './Notification';
 import Filter from './Filter';
 
-const App = ({ store }) => {
+const App = () => {
   return (
     <div>
-      <Notification store={store} />
-      <Filter store={store} />
-      <AnecdoteList store={store} />
-      <AnecdoteForm store={store} />
+      <h1>Programming anecdotes</h1>
+      <Notification />
+      <Filter />
+      <AnecdoteList />
+      <AnecdoteForm />
     </div>
   );
 };
