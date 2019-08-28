@@ -1,21 +1,32 @@
-export const addVote = id => {
-  return {
-    type: 'VOTE',
-    data: { id }
+import anecdoteService from '../services/anecdotes';
+
+export const addVote = anecdote => {
+  return async dispatch => {
+    const updatedAnecdote = await anecdoteService.update(anecdote.id, anecdote);
+    dispatch({
+      type: 'VOTE',
+      data: updatedAnecdote
+    })
+  }
+};
+
+export const createAnecdote = content => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.create(content);
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote
+    });
   };
 };
 
-export const createAnecdote = data => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data
-  };
-};
-
-export const initializeAnecdotes = anecdotes => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll();
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes
+    });
   };
 };
 
@@ -24,7 +35,7 @@ const reducer = (state = [], action) => {
     case 'VOTE':
       return state.map(item => {
         if (item.id === action.data.id) {
-          return { ...item, votes: item.votes + 1 };
+          return action.data;
         }
         return item;
       });

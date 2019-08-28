@@ -13,6 +13,15 @@ export const removeMessage = () => {
   };
 };
 
+export const setNotification = (message, duration) => {
+  return async dispatch => {
+    dispatch(displayMessage(message));
+    setTimeout(() => {
+      dispatch(removeMessage());
+    }, duration * 1000);
+  };
+};
+
 const notificationReducer = (
   state = { message: '', shouldRender: false },
   action
